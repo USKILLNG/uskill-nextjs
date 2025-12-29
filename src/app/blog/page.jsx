@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { Calendar, User } from "lucide-react";
 import Image from "next/image";
-
+import { Calendar, User } from "lucide-react";
 
 // Mock Blog Data
 const posts = [
   {
-    id: 1,
+    id: 1, // We will use this ID for the URL
     title: "10 High-Income Skills to Learn in 2025",
     excerpt: "Discover the top skills that employers are looking for this year and how you can master them.",
     author: "Uzo Admin",
@@ -36,28 +35,32 @@ const posts = [
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-gray-50/50 py-12">
+    <div className="min-h-screen bg-gray-50/50 py-12 pt-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-dark mb-2">USKILL Blog</h1>
         <p className="text-slate-500 mb-10">Insights, tutorials, and news from the tech world.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <div key={post.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="h-48 overflow-hidden relative">
-                <Image src={post.image} alt={post.title} fill priority className=" object-cover hover:scale-105 transition-transform duration-500" />
-                <span className="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-primary">
+            <div key={post.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow flex flex-col h-full">
+              <Link href={`/blog/${post.id}`} className="block h-48 overflow-hidden relative group">
+                <Image src={post.image} alt={post.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                <span className="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
                   {post.category}
                 </span>
-              </div>
-              <div className="p-6">
+              </Link>
+              <div className="p-6 flex flex-col flex-1">
                 <div className="flex items-center gap-4 text-xs text-slate-400 mb-3">
                   <span className="flex items-center gap-1"><Calendar size={12} /> {post.date}</span>
                   <span className="flex items-center gap-1"><User size={12} /> {post.author}</span>
                 </div>
-                <h2 className="text-xl font-bold text-dark mb-3 leading-tight">{post.title}</h2>
-                <p className="text-slate-600 text-sm mb-4 line-clamp-3">{post.excerpt}</p>
-                <Link href={'/blog/' + post.id} className="text-primary font-bold text-sm hover:underline">
+                <Link href={`/blog/${post.id}`}>
+                   <h2 className="text-xl font-bold text-dark mb-3 leading-tight hover:text-primary transition-colors">{post.title}</h2>
+                </Link>
+                <p className="text-slate-600 text-sm mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
+                
+                {/* UPDATED: This Link now points to the dynamic ID */}
+                <Link href={`/blog/${post.id}`} className="text-primary font-bold text-sm hover:underline mt-auto inline-flex items-center">
                   Read Article &rarr;
                 </Link>
               </div>

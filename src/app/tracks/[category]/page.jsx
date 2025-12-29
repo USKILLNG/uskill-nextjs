@@ -2,6 +2,7 @@
 
 import { courses } from "@/lib/courses";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Star, ArrowLeft } from "lucide-react";
 
@@ -36,7 +37,14 @@ export default function TrackPage() {
               <Link key={course.id} href={`/courses/${course.id}`} className="group">
                 <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 h-full flex flex-col">
                   <div className="relative h-48 overflow-hidden">
-                     <img src={course.image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                     <Image
+                       src={course.image}
+                       alt={course.title}
+                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                       fill
+                       priority
+                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                     />
                   </div>
                   <div className="p-5 flex flex-col flex-1">
                     <h3 className="text-lg font-bold text-dark leading-tight mb-2 group-hover:text-primary transition-colors">
@@ -69,3 +77,4 @@ export default function TrackPage() {
     </div>
   );
 }
+

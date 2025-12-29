@@ -14,7 +14,7 @@ export default function TeachPage() {
           <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-10">
             Become an instructor and change lives — including your own. Share your knowledge with thousands of students in Nigeria and beyond.
           </p>
-          <Link href="/auth/signup">
+          <Link href="/teach/onboarding">
             <button className="bg-primary hover:bg-primaryHover text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all">
               Get Started
             </button>

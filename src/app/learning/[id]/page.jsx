@@ -95,3 +95,4 @@ export default function LearningPage({ params }) {
     </div>
   );
 }
+

@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { useParams } from "next/navigation";
 import { Star, Play, CheckCircle2, Clock, Users, Award, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function CourseDetailPage() {
@@ -58,7 +59,7 @@ export default function CourseDetailPage() {
             
             {/* Video Placeholder */}
             <div className="bg-black rounded-xl overflow-hidden aspect-video relative shadow-xl mb-10 group cursor-pointer border-4 border-white">
-               <img src={course.image} alt={course.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
+               <Image src={course.image} alt={course.title} fill className="object-cover opacity-60 group-hover:opacity-40 transition-opacity" priority />
                <div className="absolute inset-0 flex items-center justify-center">
                   <div className="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                      <Play size={32} className="text-primary ml-1 fill-current" />

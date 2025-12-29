@@ -22,20 +22,19 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-dark mb-4">Learn</h4>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="#" className="hover:text-primary">Browse Categories</Link></li>
-              <li><Link href="#" className="hover:text-primary">Find a Mentor</Link></li>
-              <li><Link href="#" className="hover:text-primary">Student Success Stories</Link></li>
-              <li><Link href="#" className="hover:text-primary">Pricing</Link></li>
+              <li><Link href="/courses" className="hover:text-primary">Browse Categories</Link></li>
+              <li><Link href="/mentors" className="hover:text-primary">Find a Mentor</Link></li>
+              <li><Link href="/stories" className="hover:text-primary">Student Success Stories</Link></li>
+              <li><Link href="/pricing" className="hover:text-primary">Pricing</Link></li>
             </ul>
           </div>
 
-          {/* Teach Column (New) */}
+          {/* Teach Column (Cleanup: Removed Academy) */}
           <div>
             <h4 className="font-bold text-dark mb-4">Teach</h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li><Link href="/teach" className="hover:text-primary">Become an Instructor</Link></li>
-              <li><Link href="#" className="hover:text-primary">Instructor Rules</Link></li>
-              <li><Link href="#" className="hover:text-primary">Teaching Academy</Link></li>
+              <li><Link href="/instructor-rules" className="hover:text-primary">Instructor Rules</Link></li>
             </ul>
           </div>
 
@@ -43,9 +42,9 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-dark mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="#" className="hover:text-primary">About Us</Link></li>
-              <li><Link href="#" className="hover:text-primary">Careers</Link></li>
-              <li><Link href="#" className="hover:text-primary">Contact Support</Link></li>
+              <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
+              <li><Link href="/contact" className="hover:text-primary">Contact Support</Link></li>
+              <li><Link href="#" className="hover:text-primary">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
