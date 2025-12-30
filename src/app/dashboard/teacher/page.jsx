@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
-  Upload, MessageSquare, BarChart2, Video, Plus, Search, 
-  Settings, Users, DollarSign, Star, MoreVertical, Edit2, Eye,
-  LayoutDashboard, LogOut, HelpCircle 
+  MessageSquare, BarChart2, Video, Plus, Search, 
+  Settings, Users, DollarSign, Star, Edit2, Eye,
+  LogOut, HelpCircle, Menu, X, ArrowLeft, MoreVertical 
 } from "lucide-react";
 
 export default function TeacherDashboard() {
   const [activeTab, setActiveTab] = useState("courses");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Navigation Items
   const navItems = [
@@ -23,23 +24,47 @@ export default function TeacherDashboard() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       
-      {/* 1. Sidebar Navigation (The Rail) */}
-      <aside className="fixed left-0 top-0 h-full bg-dark text-slate-400 z-50 transition-all duration-300 w-20 hover:w-64 group flex flex-col shadow-2xl overflow-hidden">
+      {/* --- MOBILE OVERLAY --- */}
+      {/* Clicking this closes the sidebar on mobile */}
+      {isMobileMenuOpen && (
+        <div 
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 bg-black/50 z-40 md:hidden glass"
+        />
+      )}
+
+      {/* --- SIDEBAR NAVIGATION --- */}
+      <aside className={`
+        fixed left-0 top-0 h-full bg-dark text-slate-400 z-50 transition-all duration-300 flex flex-col shadow-2xl overflow-hidden
+        
+        /* Mobile: Slide in/out, fixed width */
+        ${isMobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
+        
+        /* Desktop: Always visible, Rail effect (collapsed 20, expanded 64) */
+        md:translate-x-0 md:w-20 md:hover:w-64
+        
+        /* Group allows us to target children when hovering the sidebar */
+        group
+      `}>
          
          {/* Branding Area */}
-         <div className="h-20 flex items-center px-5 mb-6 border-b border-slate-800">
+         <div className="h-20 flex items-center px-5 mb-6 border-b border-slate-800 justify-between">
             <Link href="/" className="flex items-center gap-3">
                {/* Icon (Always Visible) */}
                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-extrabold text-xl shrink-0">
                   U
                </div>
-               {/* Text (Visible on Hover) */}
-               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+               {/* Text (Visible on Mobile OR Desktop Hover) */}
+               <div className={`transition-opacity duration-300 whitespace-nowrap overflow-hidden ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                   <span className="text-xl font-extrabold text-white tracking-tighter">
                      USKILL<span className="text-primary">.NG</span>
                   </span>
                </div>
             </Link>
+            {/* Close Button (Mobile Only) */}
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden text-slate-400 hover:text-white">
+              <X size={24} />
+            </button>
          </div>
 
          {/* Navigation Links */}
@@ -47,19 +72,17 @@ export default function TeacherDashboard() {
             {navItems.map((item) => (
                <button 
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
                   className={`w-full flex items-center h-12 px-3 rounded-xl transition-all relative overflow-hidden whitespace-nowrap ${
                      activeTab === item.id 
                      ? "bg-primary text-white" 
                      : "hover:bg-white/10 hover:text-white"
                   }`}
                >
-                  {/* Icon Container */}
                   <div className="w-10 flex justify-center shrink-0">
                      {item.icon}
                   </div>
-                  {/* Label (Slide Reveal) */}
-                  <span className={`ml-3 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${activeTab === item.id ? "text-white" : ""}`}>
+                  <span className={`ml-3 font-bold transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} ${activeTab === item.id ? "text-white" : ""}`}>
                      {item.label}
                   </span>
                </button>
@@ -68,39 +91,57 @@ export default function TeacherDashboard() {
          
          {/* Footer Actions */}
          <div className="p-3 border-t border-slate-800 space-y-2">
+            {/* Switch to Student View */}
+            <Link href="/dashboard" className="w-full flex items-center h-12 px-3 rounded-xl transition-all hover:bg-white/10 hover:text-white whitespace-nowrap overflow-hidden bg-slate-800/50 text-slate-300">
+               <div className="w-10 flex justify-center shrink-0">
+                  <ArrowLeft size={24} />
+               </div>
+               <span className={`ml-3 font-bold transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>Student View</span>
+            </Link>
+
             <button className="w-full flex items-center h-12 px-3 rounded-xl transition-all hover:bg-white/10 hover:text-white whitespace-nowrap overflow-hidden">
                <div className="w-10 flex justify-center shrink-0">
                   <HelpCircle size={24} />
                </div>
-               <span className="ml-3 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Help</span>
+               <span className={`ml-3 font-bold transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>Help</span>
             </button>
+            
             <Link href="/" className="w-full flex items-center h-12 px-3 rounded-xl transition-all hover:bg-red-500/10 hover:text-red-500 text-red-400 whitespace-nowrap overflow-hidden">
                <div className="w-10 flex justify-center shrink-0">
                   <LogOut size={24} />
                </div>
-               <span className="ml-3 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Exit</span>
+               <span className={`ml-3 font-bold transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>Exit</span>
             </Link>
          </div>
       </aside>
 
       {/* 2. Main Content Area */}
-      {/* Added ml-20 to offset the collapsed sidebar width */}
-      <main className="flex-1 ml-20 p-6 md:p-10 transition-all duration-300">
+      {/* Added md:ml-20 to offset the desktop rail sidebar */}
+      <main className="flex-1 md:ml-20 p-4 md:p-10 transition-all duration-300 w-full">
          <div className="max-w-7xl mx-auto">
             
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-               <div>
-                  <h1 className="text-3xl font-bold text-dark">Instructor Dashboard</h1>
-                  <p className="text-slate-500">Overview of your activity and performance.</p>
+            {/* Header with Hamburger */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pt-20 md:pt-0">
+               <div className="flex items-center gap-4">
+                  {/* Hamburger Button (Mobile Only) */}
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    className="md:hidden p-2 bg-white rounded-lg shadow-sm border border-slate-200 text-slate-700"
+                  >
+                    <Menu size={24} />
+                  </button>
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-dark">Instructor Dashboard</h1>
+                    <p className="text-slate-500 text-sm md:text-base">Overview of your activity and performance.</p>
+                  </div>
                </div>
-               <button className="bg-primary hover:bg-primaryHover text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-primary/20 transition-all">
+               <button className="bg-primary hover:bg-primaryHover text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-primary/20 transition-all w-full md:w-auto justify-center">
                   <Plus size={20}/> New Course
                </button>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-10">
                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                      <div className="p-3 bg-green-50 rounded-xl text-green-600"><DollarSign size={20}/></div>
@@ -144,8 +185,9 @@ export default function TeacherDashboard() {
                      </div>
                   </div>
                   
+                  {/* Responsive Table Wrapper */}
                   <div className="overflow-x-auto">
-                     <table className="w-full">
+                     <table className="w-full min-w-150">
                         <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-bold">
                            <tr>
                               <th className="px-6 py-4 text-left">Course</th>
@@ -161,9 +203,9 @@ export default function TeacherDashboard() {
                               <td className="px-6 py-4">
                                  <div className="flex items-center gap-4">
                                     <div className="h-12 w-20 bg-slate-200 rounded-lg overflow-hidden shrink-0 relative">
-                                       <Image src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" alt="Course thumbnail" fill className="object-cover" />
+                                       <Image src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" alt="Course cover" fill className="object-cover" unoptimized />
                                     </div>
-                                    <div className="font-bold text-dark text-sm">Complete Web Development Bootcamp</div>
+                                    <div className="font-bold text-dark text-sm line-clamp-1">Complete Web Development Bootcamp</div>
                                  </div>
                               </td>
                               <td className="px-6 py-4 text-sm text-slate-600">1,205</td>
@@ -186,7 +228,7 @@ export default function TeacherDashboard() {
                                     <div className="h-12 w-20 bg-slate-200 rounded-lg overflow-hidden shrink-0">
                                        <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400"><Video size={20}/></div>
                                     </div>
-                                    <div className="font-bold text-dark text-sm">Advanced React Patterns (Draft)</div>
+                                    <div className="font-bold text-dark text-sm line-clamp-1">Advanced React Patterns (Draft)</div>
                                  </div>
                               </td>
                               <td className="px-6 py-4 text-sm text-slate-600">-</td>

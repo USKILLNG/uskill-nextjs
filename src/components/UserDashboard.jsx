@@ -78,7 +78,7 @@ export default function UserDashboard() {
               
               <div className="flex flex-col md:flex-row gap-8 items-center relative z-10">
                 <div className="w-full md:w-80 h-48 rounded-2xl overflow-hidden relative shadow-md">
-                   <Image src={ACTIVE_COURSE.image} alt="Course" fill unoptimized className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                   <Image src={ACTIVE_COURSE.image} alt="Course" fill className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                       <div className="w-12 h-12 bg-white/90 backdrop-blur rounded-full flex items-center justify-center pl-1 shadow-lg">
                         <Play size={24} className="text-primary fill-current" />
@@ -121,7 +121,7 @@ export default function UserDashboard() {
                 return (
                   <div key={course.id} className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-lg transition-all flex flex-col">
                     <Link href={`/courses/${course.id}`} className="block relative h-40 rounded-xl overflow-hidden mb-4">
-                      <Image src={course.image} alt={course.title} fill unoptimized className="w-full h-full object-cover" />
+                      <Image src={course.image} alt={course.title} fill className="object-cover" />
                       <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold">{course.category}</div>
                     </Link>
                     <h4 className="font-bold text-dark mb-2 line-clamp-2">{course.title}</h4>
@@ -164,29 +164,33 @@ export default function UserDashboard() {
                   </div>
               </div>
 
-              {/* Referral Table */}
+              {/* Referral Table (Updated with horizontal scroll) */}
               <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
                  <div className="px-6 py-4 border-b border-slate-50 font-bold text-dark">Recent Activity</div>
-                 <table className="w-full text-sm text-left">
-                    <thead className="bg-slate-50 text-slate-500">
-                       <tr>
-                          <th className="px-6 py-3 font-medium">User</th>
-                          <th className="px-6 py-3 font-medium">Date</th>
-                          <th className="px-6 py-3 font-medium">Status</th>
-                          <th className="px-6 py-3 font-medium text-right">Commission</th>
-                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                       {[1,2,3].map((i) => (
-                          <tr key={i} className="hover:bg-slate-50/50">
-                             <td className="px-6 py-4 font-medium text-dark">Student #{100+i}</td>
-                             <td className="px-6 py-4 text-slate-500">Dec {20+i}, 2024</td>
-                             <td className="px-6 py-4"><span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold">Converted</span></td>
-                             <td className="px-6 py-4 text-right font-bold text-dark">₦1,500</td>
-                          </tr>
-                       ))}
-                    </tbody>
-                 </table>
+                 
+                 {/* Scroll Wrapper Fix */}
+                 <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left min-w-150">
+                        <thead className="bg-slate-50 text-slate-500">
+                        <tr>
+                            <th className="px-6 py-3 font-medium">User</th>
+                            <th className="px-6 py-3 font-medium">Date</th>
+                            <th className="px-6 py-3 font-medium">Status</th>
+                            <th className="px-6 py-3 font-medium text-right">Commission</th>
+                        </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                        {[1,2,3].map((i) => (
+                            <tr key={i} className="hover:bg-slate-50/50">
+                                <td className="px-6 py-4 font-medium text-dark">Student #{100+i}</td>
+                                <td className="px-6 py-4 text-slate-500">Dec {20+i}, 2024</td>
+                                <td className="px-6 py-4"><span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold">Converted</span></td>
+                                <td className="px-6 py-4 text-right font-bold text-dark">₦1,500</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                 </div>
               </div>
            </motion.div>
         )}
