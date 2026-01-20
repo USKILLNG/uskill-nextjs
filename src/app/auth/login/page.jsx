@@ -4,16 +4,40 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
-import { Loader2, Github, Facebook } from "lucide-react";
+import { Loader2, Github, Facebook, AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+// 1. Define Validation Schema
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
+});
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth(); // Grab the mock login function
+  const { login } = useAuth();
+  
+  // 2. Initialize React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
 
-  // Single handler for all buttons in Dev Mode
-  const handleMockLogin = async () => {
+  // Handler for Social Login (No validation needed)
+  const handleSocialLogin = async () => {
     setIsLoading(true);
-    await login(); // This triggers the fake login
+    await login();
+  };
+
+  // Handler for Email Form (Only fires if validation passes)
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    console.log("Form Validated:", data); // For debugging
+    await login(); 
   };
 
   return (
@@ -34,13 +58,13 @@ export default function LoginPage() {
         <div className="p-8">
           <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-dark">Log in or Sign up</h2>
-            <p className="text-xs text-orange-500 font-bold uppercase tracking-wider mt-1">Dev Mode: Click any button to login</p>
+            <p className="text-xs text-orange-500 font-bold uppercase tracking-wider mt-1">Dev Mode: Validation Active</p>
           </div>
 
           <div className="space-y-3">
             {/* Google Button */}
             <button
-              onClick={handleMockLogin}
+              onClick={handleSocialLogin}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl hover:bg-slate-50 transition-all shadow-sm active:scale-95 disabled:opacity-70"
             >
@@ -61,7 +85,7 @@ export default function LoginPage() {
 
             {/* GitHub Button */}
             <button
-              onClick={handleMockLogin}
+              onClick={handleSocialLogin}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-[#24292e] text-white font-bold py-3 px-4 rounded-xl hover:opacity-90 transition-all shadow-sm active:scale-95 disabled:opacity-70"
             >
@@ -71,7 +95,7 @@ export default function LoginPage() {
 
             {/* Facebook Button */}
             <button
-              onClick={handleMockLogin}
+              onClick={handleSocialLogin}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-[#1877F2] text-white font-bold py-3 px-4 rounded-xl hover:opacity-90 transition-all shadow-sm active:scale-95 disabled:opacity-70"
             >
@@ -89,12 +113,33 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleMockLogin(); }}>
+          {/* Validated Form */}
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
              <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-                <input type="email" placeholder="you@example.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary transition-all" />
+                <div className="relative">
+                  <input 
+                    {...register("email")}
+                    type="email" 
+                    disabled={isLoading}
+                    placeholder="you@example.com" 
+                    className={`w-full px-4 py-3 rounded-xl border ${errors.email ? 'border-red-500 focus:ring-red-200' : 'border-slate-200 focus:border-primary'} focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all`} 
+                  />
+                  {errors.email && (
+                    <div className="absolute right-3 top-3 text-red-500">
+                      <AlertCircle size={20} />
+                    </div>
+                  )}
+                </div>
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1 font-medium ml-1">{errors.email.message}</p>
+                )}
              </div>
-             <button type="submit" disabled={isLoading} className="w-full bg-dark text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-dark/20 disabled:opacity-70">
+             <button 
+                type="submit" 
+                disabled={isLoading} 
+                className="w-full bg-dark text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-dark/20 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
                 {isLoading ? "Logging in..." : "Log In"}
              </button>
           </form>
