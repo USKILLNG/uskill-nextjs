@@ -3,12 +3,42 @@
 import { courses } from "@/lib/courses";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Search, SlidersHorizontal } from "lucide-react";
-import { useState } from "react";
+import { Star, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// 1. Reusable Skeleton Component
+const CourseCardSkeleton = () => (
+  <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm h-full flex flex-col">
+    {/* Image Placeholder */}
+    <div className="relative h-48 bg-slate-200 animate-pulse">
+       <div className="absolute top-3 left-3 w-20 h-6 bg-slate-300 rounded-lg"></div>
+    </div>
+    {/* Content Placeholders */}
+    <div className="p-5 flex flex-col flex-1 space-y-3">
+      <div className="h-6 bg-slate-200 rounded animate-pulse w-3/4"></div>
+      <div className="h-6 bg-slate-200 rounded animate-pulse w-1/2"></div>
+      <div className="h-3 bg-slate-100 rounded animate-pulse w-1/3 mt-2"></div>
+      
+      <div className="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+         <div className="h-8 w-24 bg-slate-200 rounded animate-pulse"></div>
+         <div className="h-4 w-20 bg-slate-200 rounded animate-pulse"></div>
+      </div>
+    </div>
+  </div>
+);
 
 export default function CoursesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All Courses");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 2. Simulate Network Request
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // 1.5s simulated delay
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filter Logic
   const filteredCourses = courses.filter(course => {
@@ -28,7 +58,6 @@ export default function CoursesPage() {
               <p className="text-slate-500">Master new skills with our top-rated curriculum.</p>
            </div>
            
-           {/* Search Input (Section 2) */}
            <div className="relative w-full md:w-80">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
               <input 
@@ -54,10 +83,15 @@ export default function CoursesPage() {
           ))}
         </div>
 
-        {/* Course Grid */}
-        {filteredCourses.length > 0 ? (
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             {filteredCourses.map((course) => (
+        {/* 3. Conditional Grid Rendering */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+           {isLoading ? (
+              // Render 8 Skeleton Cards
+              Array(8).fill(0).map((_, i) => (
+                 <CourseCardSkeleton key={i} />
+              ))
+           ) : filteredCourses.length > 0 ? (
+             filteredCourses.map((course) => (
                <Link key={course.id} href={`/courses/${course.id}`} className="group">
                  <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 h-full flex flex-col">
                    <div className="relative h-48 overflow-hidden">
@@ -83,14 +117,14 @@ export default function CoursesPage() {
                    </div>
                  </div>
                </Link>
-             ))}
-           </div>
-        ) : (
-           <div className="text-center py-20">
-              <p className="text-slate-500 text-lg">{`No courses found matching "${searchTerm}"`}</p>
-              <button onClick={() => {setSearchTerm(""); setActiveCategory("All Courses")}} className="mt-4 text-primary font-bold hover:underline">Clear Filters</button>
-           </div>
-        )}
+             ))
+           ) : (
+              <div className="col-span-full text-center py-20">
+                 <p className="text-slate-500 text-lg">{`No courses found matching "${searchTerm}"`}</p>
+                 <button onClick={() => {setSearchTerm(""); setActiveCategory("All Courses")}} className="mt-4 text-primary font-bold hover:underline">Clear Filters</button>
+              </div>
+           )}
+        </div>
 
       </div>
     </div>
